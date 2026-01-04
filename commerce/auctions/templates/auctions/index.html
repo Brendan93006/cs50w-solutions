@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+            {% for listing in listings %}
+                <a href="{% url 'listing' listing.id %}" class="text-decoration-none text-dark">
+                    <div class="listing mb-4 border border-secondary rounded-3 p-3">
+                        <div class="row g-3 align-items-stretch h-100">
+                            {% if listing.image %}
+                                <div class="col-auto d-flex align-items-stretch">
+                                    <img class="img-fluid h-100 object-fit-cover" style="max-width: 150px;" src="{{ listing.image.url }}" alt="{{ listing.title }}">
+                                </div>
+                            {% endif %}
+                            <div class="col text-end">
+                                <h3>{{ listing.title }}</h3>
+                                <h6><strong>Price:</strong>{% if listing.highest_bid %} ${{ listing.highest_bid.price }}{% else %} ${{ listing.starting_bid }}{% endif %}</h6>
+                                {% if listing.exact_name %}
+                                    <h6>{{ listing.exact_name }}</h6>
+                                {% endif %}
+                                <small class="text-secondary text-end">Created {{ listing.created_at|date:"M. j, Y, g:i a" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+{% endblock %}

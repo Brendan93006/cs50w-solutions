@@ -1,0 +1,64 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="listing mb-4">
+        <h2>Listing: {{ listing.title }}</h2>
+        {% if lister %}
+        <form method="POST">
+            <div>
+            {% csrf_token %}
+                <input type="hidden" name="action" value="close_listing">
+                <button type="submit" class="btn btn-light">Close Listing</button>
+            </div>
+        </form>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="watchlist">
+            {% if is_in_watchlist %}
+            <div class="btn-group-toggle" data-toggle="buttons" style="padding-bottom: 20px;">
+                    <button type="submit" class="btn btn-secondary" style="padding-top:0.1rem; padding-bottom:0.1rem; font-size:0.65rem;">Remove from Watchlist</button>
+            </div>
+            {% else %}
+            <div class="btn-group-toggle" data-toggle="buttons" style="padding-bottom: 20px;">
+                    <button type="submit" class="btn btn-secondary" style="padding-top:0.1rem; padding-bottom:0.1rem; font-size:0.65rem;">Add to Watchlist</button>
+            </div>
+            {% endif %}
+        </form>
+        {% if listing.image %}
+            <img src="{{ listing.image.url }}" alt="{{ listing.title }}" style="max-width: 300px;">
+        {% endif %}
+        <p>{{ listing.exact_name }}</p>
+        <h2>${{ bid_price }}</h2>
+        <small>{{ num_bids }} bid(s) so far. {% if highest_bidder %}{% if highest_bidder == user %}Your bid is the current bid.{% endif %}{% endif %}</small>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="place_bid">
+            <div class="form-group">
+                <input class="form-control w-auto" type="number" name="bid_price" step="0.01" min="0" placeholder="Enter a bid">
+            </div>
+            <button type="submit" class="btn btn-primary">Place Bid</button>
+        </form>
+        <h3>Details:</h3>
+        <ul>
+            <li>Listed by: <a class="text-primary">{{ listing.listed_by }}</a></li>
+            <li>Category: {{ listing.get_category_display }}</li>
+        </ul>
+        <h3>Comment:</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_comment">
+            <div class="form-group">
+                <textarea type="textarea" placeholder="Add a Comment" name="comment" class="form-control w-auto"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Comment</button>
+        </form>
+        <ul>
+        {% for comment, commenter in comments %}
+            <li>
+                <a class="text-primary">{{ commenter }}</a>: {{ comment }}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="d-flex justify-content-center">
+    <form method="POST" enctype="multipart/form-data" class="text-center">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Title:</label>
+            <input class="form-control" name="title" type="text" placeholder="Title" required>
+        </div>
+        <div class="form-group">
+            <label>Exact Name:</label>
+            <input class="form-control" name="exact_name" type="text" placeholder="Exact Name" required>
+        </div>
+        <div class="form-group">
+            <label>Category:</label>
+            <select class="form-control" name="category">
+                <option value="" disabled selected hidden>Select an option</option>
+                <option value="ELEC">Electronics</option>
+                <option value="COMP">Computers & Accessories</option>
+                <option value="PT">Phones & Tablets</option>
+                <option value="HK">Home & Kitchen</option>
+                <option value="FURN">Furniture</option>
+                <option value="CLOTH">Clothing & Accessories</option>
+                <option value="SHOES">Shoes</option>
+                <option value="JW">Jewelry & Watches</option>
+                <option value="SO">Sports & Outdoors</option>
+                <option value="AUTO">Automotive</option>
+                <option value="TOOL">Tools & Home Improvement</option>
+                <option value="TG">Toys & Games</option>
+                <option value="BM">Books & Media</option>
+                <option value="MI">Musical Instruments</option>
+                <option value="COLL">Collectibles</option>
+                <option value="ART">Art</option>
+                <option value="ANT">Antiques</option>
+                <option value="HB">Health & Beauty</option>
+                <option value="PS">Pet Supplies</option>
+                <option value="RE">Real Estate</option>
+                <option value="IB">Industrial & Business</option>
+                <option value="FB">Food & Beverages</option>
+                <option value="NULL">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Image:</label>
+            <input class="form-control-file" type="file" name="image">
+        </div>
+        <div class="form-group">
+            <label>Starting Bid:</label>
+            <input class="form-control" name="starting_bid" type="number" step="0.01" min="0" placeholder="0.00" required>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Create Listing</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
