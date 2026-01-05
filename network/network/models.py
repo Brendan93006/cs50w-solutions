@@ -7,14 +7,15 @@ class User(AbstractUser):
 
 class Post(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
-    content = models.TextField()
-    timestamp = models.DateTimeField()
+    content = models.TextField(max_length=2000)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 class Like(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="like")
-    liker = models.ForeignKey(User, on_delete=models.CASCADE, related_name="like")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+    liker = models.ForeignKey(User, on_delete=models.CASCADE, related_name="liker")
 
 class comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comment")
-    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
-
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenter")
+    content = models.TextField(max_length=1000)
+    timestamp = models.DateTimeField(auto_now_add=True)
