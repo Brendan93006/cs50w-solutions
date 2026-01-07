@@ -1,0 +1,28 @@
+.post_content {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.posts {
+    width: 100%;
+}
+
+.post {
+    border: 1px solid grey;
+    padding: 12px;
+    margin: 12px;
+    padding-top: 12px;
+}
+
+.new_post {
+    margin: 12px;
+    border: 1px solid grey;
+    padding: 12px;
+}
+
+.username {
+    color: inherit;
+    text-decoration: none;
+}
+
+

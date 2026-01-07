@@ -1,14 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import User, Post, Like, Comment, Follow
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.select_related("creator").order_by("-timestamp")
+    return render(request, "network/index.html", { "posts": posts })
 
 
 def login_view(request):
@@ -61,3 +63,27 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+    
+@login_required
+def create_post(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest("POST required")
+        
+    content = request.POST.get("post_content")
+    
+    if not content:
+        return HttpResponseBadRequest("Must Provide Content")
+    
+    Post.objects.create(creator=request.user, content=content)
+
+    return redirect("index")
+
+@login_required
+def profile_view(request, username):
+    if request.method == 'GET':
+        user = User.objects.get(username=username)
+        follows = Follow.objects.filter(followed=user, follower=request.user).exists()
+        posts = Post.objects.filter(creator=user)
+        user_followers = user.followers.count()
+        user_following = user.following.count()
+        return render(request, "network/profile.html", { "username": user, "posts": posts, "followers": user_followers, "following": user_following, "follows": follows })
