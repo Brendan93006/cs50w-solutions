@@ -4,13 +4,19 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadReque
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import User, Post, Like, Comment, Follow
 
 
 def index(request):
     posts = Post.objects.select_related("creator").order_by("-timestamp")
-    return render(request, "network/index.html", { "posts": posts })
+
+    page_number = request.GET.get('page')
+
+    page = pagination(posts, page_number)
+
+    return render(request, "network/index.html", { "page": page })
 
 
 def login_view(request):
@@ -93,7 +99,11 @@ def profile_view(request, username):
 
         user_following = user.following.count()
 
-        return render(request, "network/profile.html", { "username": user, "posts": posts, "followers": user_followers, "following": user_following, "follows": follows })
+        page_number = request.GET.get('page')
+
+        page = pagination(posts, page_number)
+
+        return render(request, "network/profile.html", { "username": user, "page": page, "followers": user_followers, "following": user_following, "follows": follows })
     
 
 @login_required
@@ -118,3 +128,33 @@ def toggle_follow(request, username):
             "following": following,
             "followers_count": target.followers.count()
         })
+    
+
+@login_required
+def following_view(request):
+    if request.method == "GET":
+
+        user = request.user
+
+        followed_users = User.objects.filter(followers__follower=request.user)
+
+        posts = Post.objects.filter(creator__in=followed_users)
+
+        page_number = request.GET.get('page')
+
+        page = pagination(posts, page_number)
+
+        return render(request, "network/following.html", { "page": page })
+
+
+def pagination(posts, page_number):
+    paginator = Paginator(posts, 10)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        page = paginator.page(1)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+
+    return page

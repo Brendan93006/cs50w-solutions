@@ -2,29 +2,7 @@
 
 {% block body %}
 
-    <h1 style="text-align: center;">{{ username }}</h1>
-
-    <p id="followers-count" style="text-align: center;">Followers: {{ followers }}</p>
-
-    <p id="following-count" style="text-align: center;">Following: {{ following }}</p>
-
-    {% if follows %}
-
-        <div style="display: flex; justify-content: center; align-items: center;">
-
-            <button id="unfollow" data-username="{{ username }}" style="text-align: center;" class="btn btn-secondary">Unfollow</button>
-        
-        </div>
-
-    {% else %}
-
-        <div style="display: flex; justify-content: center; align-items: center;">
-            
-            <button id="follow" data-username="{{ username }}" class="btn btn-primary">Follow</button>
-        
-        </div>
-    
-    {% endif %}
+    <h1>Following</h1>
 
 <div class="posts">
 

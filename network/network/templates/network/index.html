@@ -5,27 +5,64 @@
 
 {% if user.is_authenticated %}
 <div>
+
     <div class="new_post">
+
         <h5>New Post</h5>
+
         <form method="POST" action="{% url 'create_post' %}">
+
             {% csrf_token %}
+
             <textarea class="post_content" name="post_content" rows="3" maxlength="2000" required></textarea>
+
             <button type="submit" class="btn btn-primary">Post</button>
+
         </form>
+
     </div>
+
 </div>
 {% endif %}
 
 <div class="posts">
-    {% for post in posts %}
+
+    {% for post in page %}
+
         <div class="post">
+
             <strong><a class="username" href="{% url 'profile' username=post.creator.username %}">{{ post.creator.username }}</a></strong>
+            
             <p>{{ post.content }}</p>
+
             <span class="empty-heart">&#9825;</span>
+        
             <p>{{ post.timestamp|date:"M d, Y H:i" }}</p>
+        
         </div>
+
     {% empty %}
+        
         <p>No posts yet.</p>
+    
     {% endfor %}
+
 </div>
+
+<ul class="pagination">
+
+    {% if page.has_previous %}
+
+    <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}">Previous</a></li>
+
+    {% endif %}
+
+    {% if page.has_next %}
+
+    <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}">Next</a></li>
+
+    {% endif %}
+
+</ul>
+
 {% endblock %}
