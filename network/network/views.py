@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
@@ -78,12 +78,43 @@ def create_post(request):
 
     return redirect("index")
 
+
 @login_required
 def profile_view(request, username):
     if request.method == 'GET':
+
         user = User.objects.get(username=username)
+
         follows = Follow.objects.filter(followed=user, follower=request.user).exists()
+
         posts = Post.objects.filter(creator=user)
+
         user_followers = user.followers.count()
+
         user_following = user.following.count()
+
         return render(request, "network/profile.html", { "username": user, "posts": posts, "followers": user_followers, "following": user_following, "follows": follows })
+    
+
+@login_required
+def toggle_follow(request, username):
+    if request.method != "POST":
+        return HttpResponseBadRequest("POST required")
+    else:
+        target = get_object_or_404(User, username=username)
+
+        if target == request.user:
+            return JsonResponse({"error": "cannot follow yourself"}, status=400)
+        
+        follow, created = Follow.objects.get_or_create(follower=request.user, followed=target)
+
+        if not created:
+            follow.delete()
+            following = False
+        else:
+            following = True
+
+        return JsonResponse({
+            "following": following,
+            "followers_count": target.followers.count()
+        })

@@ -21,6 +21,7 @@
         <div class="post">
             <strong><a class="username" href="{% url 'profile' username=post.creator.username %}">{{ post.creator.username }}</a></strong>
             <p>{{ post.content }}</p>
+            <span class="empty-heart">&#9825;</span>
             <p>{{ post.timestamp|date:"M d, Y H:i" }}</p>
         </div>
     {% empty %}

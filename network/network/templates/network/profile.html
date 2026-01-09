@@ -2,15 +2,15 @@
 
 {% block body %}
     <h1 style="text-align: center;">{{ username }}</h1>
-    <p style="text-align: center;">Followers: {{ followers }}</p>
-    <p style="text-align: center;">Following: {{ following }}</p>
+    <p id="followers-count" style="text-align: center;">Followers: {{ followers }}</p>
+    <p id="following-count" style="text-align: center;">Following: {{ following }}</p>
     {% if follows %}
         <div style="display: flex; justify-content: center; align-items: center;">
-            <button style="text-align: center;" class="btn btn-secondary">Unfollow</button>
+            <button id="unfollow" data-username="{{ username }}" style="text-align: center;" class="btn btn-secondary">Unfollow</button>
         </div>
     {% else %}
         <div style="display: flex; justify-content: center; align-items: center;">
-            <button class="btn btn-primary">Follow</button>
+            <button id="follow" data-username="{{ username }}" class="btn btn-primary">Follow</button>
         </div>
     {% endif %}
 
@@ -19,6 +19,7 @@
         <div class="post">
             <strong><a class="username" href="{% url 'profile' username=post.creator.username %}">{{ post.creator.username }}</a></strong>
             <p>{{ post.content }}</p>
+            <span class="empty-heart">&#9825;</span>
             <p>{{ post.timestamp|date:"M d, Y H:i" }}</p>
         </div>
     {% empty %}
