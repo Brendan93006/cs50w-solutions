@@ -134,8 +134,6 @@ def toggle_follow(request, username):
 def following_view(request):
     if request.method == "GET":
 
-        user = request.user
-
         followed_users = User.objects.filter(followers__follower=request.user)
 
         posts = Post.objects.filter(creator__in=followed_users)
