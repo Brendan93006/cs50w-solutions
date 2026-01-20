@@ -33,12 +33,20 @@
 
             <strong><a class="username" href="{% url 'profile' username=post.creator.username %}">{{ post.creator.username }}</a></strong>
             
-            <p>{{ post.content }}</p>
+            {% if user == post.creator %}
 
-            <span class="empty-heart">&#9825;</span>
+                <div id="text-editor-{{ post.id }}">
+                    <p><a href="#" class="edit text-primary" data-post-id="{{ post.id }}">Edit</a></p>
+                </div>
+
+            {% endif %}
+
+            <p id="content-{{ post.id }}">{{ post.content }}</p>
         
-            <p>{{ post.timestamp|date:"M d, Y H:i" }}</p>
-        
+            <p id="timestamp">{{ post.timestamp|date:"M d, Y H:i" }}</p>
+
+                <button data-post-id="{{ post.id }}" class="{% if post in liked %}filled heart{% else %}heart{% endif %}">{% if post in liked %}&#9829;{% else %}&#9825;{% endif %}</button><span id="likes-{{ post.id }}">{{ post.likes.count }}</span>
+
         </div>
 
     {% empty %}

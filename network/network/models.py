@@ -17,12 +17,6 @@ class Like(models.Model):
     class Meta:
         unique_together = ('post', 'liker')
 
-class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenter")
-    content = models.TextField(max_length=1000)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
 class Follow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
     followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")

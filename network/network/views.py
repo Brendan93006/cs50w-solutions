@@ -6,17 +6,27 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import User, Post, Like, Comment, Follow
+import json
+
+from .models import User, Post, Like, Follow
 
 
 def index(request):
     posts = Post.objects.select_related("creator").order_by("-timestamp")
 
+    try:
+        liked = []
+        for post in posts:
+            if Like.objects.filter(liker=request.user, post=post).exists():
+                liked.append(post)
+    except TypeError:
+        liked = None
+        
     page_number = request.GET.get('page')
 
     page = pagination(posts, page_number)
 
-    return render(request, "network/index.html", { "page": page })
+    return render(request, "network/index.html", { "page": page, "liked": liked })
 
 
 def login_view(request):
@@ -93,7 +103,12 @@ def profile_view(request, username):
 
         follows = Follow.objects.filter(followed=user, follower=request.user).exists()
 
-        posts = Post.objects.filter(creator=user)
+        posts = Post.objects.filter(creator=user).order_by("-timestamp")
+
+        liked = []
+        for post in posts:
+            if Like.objects.filter(liker=request.user, post=post).exists():
+                liked.append(post)
 
         user_followers = user.followers.count()
 
@@ -103,7 +118,7 @@ def profile_view(request, username):
 
         page = pagination(posts, page_number)
 
-        return render(request, "network/profile.html", { "username": user, "page": page, "followers": user_followers, "following": user_following, "follows": follows })
+        return render(request, "network/profile.html", { "username": user, "page": page, "followers": user_followers, "following": user_following, "follows": follows, "liked": liked })
     
 
 @login_required
@@ -136,13 +151,18 @@ def following_view(request):
 
         followed_users = User.objects.filter(followers__follower=request.user)
 
-        posts = Post.objects.filter(creator__in=followed_users)
+        posts = Post.objects.filter(creator__in=followed_users).order_by("-timestamp")
 
         page_number = request.GET.get('page')
 
         page = pagination(posts, page_number)
 
-        return render(request, "network/following.html", { "page": page })
+        liked = []
+        for post in posts:
+            if Like.objects.filter(liker=request.user, post=post).exists():
+                liked.append(post)
+
+        return render(request, "network/following.html", { "page": page, "liked": liked })
 
 
 def pagination(posts, page_number):
@@ -156,3 +176,45 @@ def pagination(posts, page_number):
         page = paginator.page(paginator.num_pages)
 
     return page
+
+
+@login_required
+def edit_post(request, post_id):
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT required"}, status=400)
+    
+    data = json.loads(request.body)
+
+    content = data.get("content")
+
+    post = Post.objects.get(id=post_id)
+
+    if request.user != post.creator:
+        return JsonResponse({"error": "Unauthorized"}, status=403)
+    
+    post.content = content
+
+    post.save()
+
+    return JsonResponse({"message": "Post updated"})
+
+
+@login_required
+def toggle_like(request, post_id):
+    if request.method != "POST":
+        return HttpResponseBadRequest("POST required")
+    
+    post = Post.objects.get(id=post_id)
+    
+    like, created = Like.objects.get_or_create(liker=request.user, post=post)
+
+    if created:
+        like = True
+    else:
+        like.delete()
+        like = False
+
+    return JsonResponse({
+        "like": like,
+        "like_count": post.likes.count()
+    })
