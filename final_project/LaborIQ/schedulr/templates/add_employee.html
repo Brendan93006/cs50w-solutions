@@ -1,0 +1,39 @@
+{% extends 'schedulr/layout.html' %}
+
+{% block body %}
+
+    <h1>Employee Info</h1>
+
+    {% if message %}
+
+        {{ message }}
+
+    {% endif %}
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="form-group">
+
+            <input class="form-control" type="text" name="name" placeholder="Enter name" required>
+
+        </div>
+
+        <div class="form-group">
+
+            <input class="form-control" type="text" name="position" placeholder="Enter position" required>
+
+        </div>
+
+        <div class="form-group">
+
+            <input class="form-control" type="number" name="hourly_rate" placeholder="Enter hourly rate" required>
+
+        </div>
+    
+        <button class="btn btn-primary" type="submit">Add</button>
+
+    </form>
+
+{% endblock %}
