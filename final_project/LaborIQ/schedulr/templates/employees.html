@@ -1,8 +1,16 @@
-{% extends 'schedulr/layout.html' %}
+{% extends 'layout.html' %}
 
 {% block body %}
 
-    <button class="btn btn-primary"><a href="{ url 'add_employee' }"></a></button>
+    <div>
+        <a href="{% url 'add_employee' %}"><button class="btn btn-primary">+ Add Employee</button></a>
+    </div>
+
+{% if message %}
+
+    {{ message }}
+
+{% else %}
 
     {% for employee in employees %}
 
@@ -12,5 +20,7 @@
         <span>{{ employee.hire_date }}</span>
 
     {% endfor %}
+
+{% endif %}
 
 {% endblock %}
