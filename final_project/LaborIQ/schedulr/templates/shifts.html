@@ -1,1 +1,58 @@
 {% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">This Week</h2>
+    <div class="mb-4">
+        <a href="{% url 'add_shift' %}" class="btn btn-primary">+ Add Shift</a>
+    </div>
+
+    <div class="row text-center fw-bold border-bottom pb-2 mb-3">
+        <div class="col">Mon</div>
+        <div class="col">Tue</div>
+        <div class="col">Wed</div>
+        <div class="col">Thu</div>
+        <div class="col">Fri</div>
+        <div class="col">Sat</div>
+        <div class="col">Sun</div>
+    </div>
+
+    <div class="row">
+
+        {% for day in "0123456" %}
+
+        <div class="col">
+
+            {% for shift in shifts %}
+                {% if shift.start_time.weekday|stringformat:"s" == day %}
+                
+                    <div class="card shadow-sm rounded-4 border-0 mb-3">
+                        <div class="card-body p-2">
+
+                            <div class="fw-semibold">
+                                {{ shift.employee.name }}
+                            </div>
+
+                            <small class="text-muted">
+                                {{ shift.start_time|time:"g:i A" }}
+                                —
+                                {{ shift.end_time|time:"g:i A" }}
+                            </small>
+
+                        </div>
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

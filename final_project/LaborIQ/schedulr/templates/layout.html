@@ -16,7 +16,7 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Shifts</a>
+                        <a class="nav-link" href="{% url 'shifts' %}">Shifts</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'employees' %}">Employees</a>

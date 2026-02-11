@@ -2,25 +2,56 @@
 
 {% block body %}
 
-    <div>
-        <a href="{% url 'add_employee' %}"><button class="btn btn-primary">+ Add Employee</button></a>
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <a href="{% url 'add_employee' %}" class="btn btn-primary">
+            + Add Employee
+        </a>
     </div>
 
-{% if message %}
+    {% if message %}
 
-    {{ message }}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
 
-{% else %}
+    {% else %}
 
-    {% for employee in employees %}
+        <div class="row g-4">
 
-        <h4>{{ employee.name }}</h4>
-        <h4>{{ employee.position }}</h4>
-        <h3>{{  employee.hourly_rate  }}</h3>
-        <span>{{ employee.hire_date }}</span>
+            {% for employee in employees %}
 
-    {% endfor %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm h-100 rounded-4">
+                        <div class="card-body">
 
-{% endif %}
+                            <h5 class="card-title mb-1">
+                                {{ employee.name }}
+                            </h5>
+
+                            <p class="text-muted mb-2">
+                                {{ employee.position }}
+                            </p>
+
+                            <h6 class="fw-bold">
+                                ${{ employee.hourly_rate }}/hr
+                            </h6>
+
+                            <small class="text-secondary">
+                                Hired: {{ employee.hire_date }}
+                            </small>
+
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}

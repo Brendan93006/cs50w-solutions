@@ -2,13 +2,13 @@
 
 {% block body %}
 
-<div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="container vh-100 d-flex align-items-center justify-content-center">
 
     <div class="col-md-6 col-lg-4">
 
         <div class="card shadow-lg rounded-5 border-0 p-4">
 
-            <h1 class="text-center mb-4">Employee Info</h1>
+            <h1 class="text-center mb-4">Shift Info</h1>
 
             {% if message %}
                 <div class="alert alert-info text-center">
@@ -21,15 +21,19 @@
                 {% csrf_token %}
 
                 <div class="mb-3">
-                    <input class="form-control" type="text" name="name" placeholder="Enter name" required>
+                    <select name="employee_id" class="form-select" required>
+                        {% for employee in employees %}
+                            <option value="{{ employee.id }}">{{ employee.name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
                 <div class="mb-3">
-                    <input class="form-control" type="text" name="position" placeholder="Enter position" required>
+                    <input class="form-control" type="datetime-local" name="start_time" placeholder="Enter start time" required>
                 </div>
 
                 <div class="mb-3">
-                    <input class="form-control" type="number" step="0.01" name="hourly_rate" placeholder="Enter hourly rate" required>
+                    <input class="form-control" type="datetime-local" name="end_time" placeholder="Enter end time" required>
                 </div>
 
                 <button class="btn btn-primary w-100" type="submit">
