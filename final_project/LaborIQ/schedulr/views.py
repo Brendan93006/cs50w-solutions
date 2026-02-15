@@ -63,6 +63,7 @@ def add_employee(request):
         name = request.POST.get('name')
         position = request.POST.get('position')
         hourly_rate = request.POST.get('hourly_rate')
+        employees = Employee.objects.filter(owner=request.user).all()
 
         if not name or not position or not hourly_rate:
             return render(request, 'add_employee.html', { "message": "Must provide name/position/hourly rate." })
@@ -121,3 +122,10 @@ def add_shift(request):
     elif request.method == 'GET':
         employees = Employee.objects.filter(owner=request.user).all()
         return render(request, 'add_shift.html', { "employees": employees })
+    
+@login_required
+def delete_employee(request, employee_id):
+    if request.method == 'POST':
+        employee = get_object_or_404(Employee, pk=employee_id)
+        employee.delete()
+        return JsonResponse({"deleted": True, "employee_id": employee_id})
