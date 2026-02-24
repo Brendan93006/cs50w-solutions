@@ -5,8 +5,11 @@
 <div class="container mt-4">
 
     <h2 class="text-center mb-4">This Week</h2>
-    <div class="mb-4">
-        <a href="{% url 'add_shift' %}" class="btn btn-primary">+ Add Shift</a>
+
+    <div class="mb-4 text-center">
+        <a href="{% url 'add_shift' %}" class="btn btn-primary">
+            + Add Shift
+        </a>
     </div>
 
     <div class="row text-center fw-bold border-bottom pb-2 mb-3">
@@ -22,24 +25,36 @@
     <div class="row">
 
         {% for day in "0123456" %}
-
         <div class="col">
 
             {% for shift in shifts %}
                 {% if shift.start_time.weekday|stringformat:"s" == day %}
-                
-                    <div class="card shadow-sm rounded-4 border-0 mb-3">
+
+                    <div class="card shadow-sm rounded-4 border mb-3">
                         <div class="card-body p-2">
 
-                            <div class="fw-semibold">
-                                {{ shift.employee.name }}
-                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
 
-                            <small class="text-muted">
-                                {{ shift.start_time|time:"g:i A" }}
-                                —
-                                {{ shift.end_time|time:"g:i A" }}
-                            </small>
+                                <div>
+                                    <div class="fw-semibold">
+                                        {{ shift.employee.name }}
+                                    </div>
+
+                                    <small class="text-muted">
+                                        {{ shift.start_time|time:"g:i A" }}
+                                        <div>—</div>
+                                        {{ shift.end_time|time:"g:i A" }}
+                                    </small>
+                                </div>
+
+                                <button class="delete-shift-btn btn btn-sm btn-outline-danger rounded-circle d-flex align-items-center justify-content-center"
+                                        data-shift-id="{{ shift.id }}"
+                                        title="Delete shift"
+                                        style="width: 30px; height: 30px;">
+                                    <i class="bi bi-trash fs-6"></i>
+                                </button>
+
+                            </div>
 
                         </div>
                     </div>
@@ -48,7 +63,6 @@
             {% endfor %}
 
         </div>
-
         {% endfor %}
 
     </div>

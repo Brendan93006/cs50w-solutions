@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const employeeId = deleteButton.dataset.employeeId;
 
-        fetch(`/shifts/${employeeId}/delete/`, {
+        fetch(`/employees/${employeeId}/delete/`, {
             method: "POST",
             headers: {
                 "X-CSRFToken": getCookie("csrftoken")
@@ -17,6 +17,27 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             console.log(`deleted: ${data}`);
             const card = deleteButton.closest(".col-md-6, .col-lg-4, .col");
+            if (card) card.remove();
+        })
+    });
+
+        document.addEventListener('click', (e) => {
+        const deleteShiftButton = e.target.closest(".delete-shift-btn");
+        if (!deleteShiftButton) return;
+        e.preventDefault();
+
+        const shiftId = deleteShiftButton.dataset.shiftId;
+
+        fetch(`/shifts/${shiftId}/delete/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken")
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(`deleted: ${data}`);
+            const card = deleteShiftButton.closest(".col-md-6, .col-lg-4, .col");
             if (card) card.remove();
         })
     });

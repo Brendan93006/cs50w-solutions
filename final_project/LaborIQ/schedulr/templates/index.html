@@ -2,6 +2,80 @@
 
 {% block body %}
 
-    <h1>LaborIQ</h1>
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h1 class="display-4 fw-bold mb-3">
+            LaborIQ
+        </h1>
+
+        <p class="lead text-muted">
+            Smarter employee scheduling. Clear workforce insights.
+            Built for teams that value efficiency.
+        </p>
+
+    </div>
+
+    <div class="row justify-content-center text-center g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <h5 class="fw-semibold mb-2">Manage Employees</h5>
+                    <p class="text-muted small mb-3">
+                        Add, edit, and organize your workforce in seconds.
+                    </p>
+
+                    <a href="{% url 'employees' %}" class="btn btn-outline-primary w-100">
+                        View Employees
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <h5 class="fw-semibold mb-2">Schedule Shifts</h5>
+                    <p class="text-muted small mb-3">
+                        Plan smarter schedules without the chaos.
+                    </p>
+
+                    <a href="{% url 'shifts' %}" class="btn btn-outline-primary w-100">
+                        View Schedule
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <h5 class="fw-semibold mb-2">Add Shift</h5>
+                    <p class="text-muted small mb-3">
+                        Quickly assign work with zero friction.
+                    </p>
+
+                    <a href="{% url 'add_shift' %}" class="btn btn-primary w-100">
+                        Add New Shift
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-5 text-muted small">
+        LaborIQ • Workforce intelligence simplified
+    </div>
+
+</div>
 
 {% endblock %}

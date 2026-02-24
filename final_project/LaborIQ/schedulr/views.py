@@ -129,3 +129,10 @@ def delete_employee(request, employee_id):
         employee = get_object_or_404(Employee, pk=employee_id)
         employee.delete()
         return JsonResponse({"deleted": True, "employee_id": employee_id})
+    
+@login_required
+def delete_shift(request, shift_id):
+    if request.method == 'POST':
+        shift = get_object_or_404(Shift, pk=shift_id)
+        shift.delete()
+        return JsonResponse({"deleted": True, "shift_id": shift_id})
