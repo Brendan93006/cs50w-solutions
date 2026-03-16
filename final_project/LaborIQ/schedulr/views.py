@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.contrib import messages
 
 from .models import User, Employee, Shift
 
@@ -13,7 +14,6 @@ from datetime import date, timedelta, time, datetime
 # Create your views here.
 
 def index(request):
-
     return render(request, 'index.html')
 
 def register(request):
@@ -75,18 +75,24 @@ def add_employee(request):
     else:
         return render(request, 'add_employee.html')
 
-@login_required
 def employees_view(request):
-    if request.method == 'GET': 
+    if request.method == 'GET':
+        if not request.user.is_authenticated:
+            messages.error(request, "You must sign in to access that page.")
+            return redirect("index")
         employees = Employee.objects.filter(owner=request.user).all()
         if employees.count() == 0:
             return render(request, 'employees.html', { "employees": employees, "message": "No employees available" })
         else:
             return render(request, 'employees.html', { "employees": employees })
         
-@login_required
 def shifts_view(request):
     if request.method == 'GET':
+
+        if not request.user.is_authenticated:
+            messages.error(request, "You must sign in to access that page.")
+            return redirect("index")
+
         today = timezone.localdate()
 
         start_of_week = today - timedelta(days=today.weekday())
@@ -103,8 +109,7 @@ def shifts_view(request):
     elif request.method == 'POST':
         return render(request, 'add_shift.html')
 
-    
-@login_required
+
 def add_shift(request):
     if request.method == 'POST':
         employee = get_object_or_404(Employee, id=request.POST.get("employee_id"))
@@ -120,6 +125,10 @@ def add_shift(request):
             shift.save()
             return HttpResponseRedirect(reverse('shifts'))
     elif request.method == 'GET':
+        if not request.user.is_authenticated:
+            messages.error(request, "You must sign in to access that page.")
+            return redirect("index")
+        
         employees = Employee.objects.filter(owner=request.user).all()
         return render(request, 'add_shift.html', { "employees": employees })
     
